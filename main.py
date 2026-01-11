@@ -1,4 +1,4 @@
-import program
+import program as val
 import os
 
 def pridobi_txt(pot):
@@ -17,45 +17,42 @@ def branjeTXT(datoteka):
         content = file.read()
     return content
 
-def pisanjePodatkov(podatki):
-    with open("osebe.txt", "w", encoding="utf-8") as file:
-        file.write(podatki)
+def pisanjePodatkov(polje, argument = "a"):
+    with open("osebe.txt", argument, encoding="utf-8") as file:
+        for oseba in polje:
+            niz = f"{oseba['id']}_{oseba['imePriimek']}_{oseba['ulica']}_{oseba['telefosnka']}_{oseba['email']}\n"
+            file.write(niz)
 
 def locenjePodatkov(vsebina):
     segments = vsebina.split('|')
     veljavneOsebe = []
-    oseba = {
-        "id": 0,
-        "imePriimek": "",
-        "ulica": "",
-        "telefosnka": 0,
-        "email": ""
-    }
     id = 0
-
+    
     for segment in segments:
         informacije = segment.split('_')
         if len(informacije) < 3:
             continue
-        else:
-            imePriimek = informacije[0]
-            ulica = informacije[1]
-            telefosnka = informacije[2]
-            email = informacije[3]
+        
+        imePriimek = informacije[0]
+        ulica = informacije[1]
+        telefosnka = informacije[2]
+        email = informacije[3]
+        
+        if (len(val.validiraj_ime(imePriimek)) != 0 
+            and len(val.validiraj_naslov(ulica)) != 0 
+            and val.validiraj_telefonsko(telefosnka) != "False"
+            and val.validiraj_email(email) != "False"):
             
-            if len(program.validiraj_ime(imePriimek)) != 0 \
-                and len(program.validiraj_naslov(ulica)) != 0 \
-                and program.validiraj_telefonsko(telefosnka) \
-                and program.validiraj_email(email):
-
-                id += 1
-                oseba["id"] = id
-                oseba["imePriimek"] = imePriimek
-                oseba["ulica"] = ulica
-                oseba["telefosnka"] = telefosnka
-                oseba["email"] = email
-                veljavneOsebe.append(oseba)
-
+            id += 1
+            oseba = {
+                "id": id,
+                "imePriimek": imePriimek,
+                "ulica": ulica,
+                "telefosnka": telefosnka,
+                "email": email
+            }
+            veljavneOsebe.append(oseba)
+    
     return veljavneOsebe
 
 
@@ -78,7 +75,6 @@ if __name__ == "__main__":
     print(d)
     """
 
-    array = locenjePodatkov(vsebina)
+    polje = locenjePodatkov(vsebina)
     #print(array)
-    ste = len(array)
-    print(ste)
+    pisanjePodatkov(polje, "w")
