@@ -23,7 +23,41 @@ def pisanjePodatkov(podatki):
 
 def locenjePodatkov(vsebina):
     segments = vsebina.split('|')
-    print(segments)
+    veljavneOsebe = []
+    oseba = {
+        "id": 0,
+        "imePriimek": "",
+        "ulica": "",
+        "telefosnka": 0,
+        "email": ""
+    }
+    id = 0
+
+    for segment in segments:
+        informacije = segment.split('_')
+        if len(informacije) < 3:
+            continue
+        else:
+            imePriimek = informacije[0]
+            ulica = informacije[1]
+            telefosnka = informacije[2]
+            email = informacije[3]
+            
+            if len(program.validiraj_ime(imePriimek)) != 0 \
+                and len(program.validiraj_naslov(ulica)) != 0 \
+                and program.validiraj_telefonsko(telefosnka) \
+                and program.validiraj_email(email):
+
+                id += 1
+                oseba["id"] = id
+                oseba["imePriimek"] = imePriimek
+                oseba["ulica"] = ulica
+                oseba["telefosnka"] = telefosnka
+                oseba["email"] = email
+                veljavneOsebe.append(oseba)
+
+    return veljavneOsebe
+
 
 
 if __name__ == "__main__":
@@ -31,6 +65,20 @@ if __name__ == "__main__":
     datoteke = pridobi_txt(pot)
     st = len(datoteke)
     print(st)
-
     vsebina = branjeTXT(datoteke[0])
-    locenjePodatkov(vsebina)
+
+    """
+    a = program.validiraj_ime("W#4IIžhFu//gY17P7ž")
+    print(a)
+    b = program.validiraj_naslov("Majde Vrhovnikove ulica 1a8521 Šoštanj")
+    print(b)
+    c = program.validiraj_telefonsko("sdfsdfeewfwef")
+    print(c)
+    d = program.validiraj_email("asdasdasdasd")
+    print(d)
+    """
+
+    array = locenjePodatkov(vsebina)
+    #print(array)
+    ste = len(array)
+    print(ste)
