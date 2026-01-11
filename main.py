@@ -14,8 +14,8 @@ def pridobi_txt(pot):
 
 def branjeTXT(datoteka):
     with open(datoteka, "r", encoding="utf-8") as file:
-        content = file.read()
-    return content
+        vsebina = file.read()
+    return vsebina
 
 def pisanjePodatkov(polje, argument = "a"):
     with open("osebe.txt", argument, encoding="utf-8") as file:
@@ -60,21 +60,14 @@ def locenjePodatkov(vsebina):
 if __name__ == "__main__":
     pot = "D:/Faks/data"
     datoteke = pridobi_txt(pot)
-    st = len(datoteke)
-    print(st)
-    vsebina = branjeTXT(datoteke[0])
 
-    """
-    a = program.validiraj_ime("W#4IIžhFu//gY17P7ž")
-    print(a)
-    b = program.validiraj_naslov("Majde Vrhovnikove ulica 1a8521 Šoštanj")
-    print(b)
-    c = program.validiraj_telefonsko("sdfsdfeewfwef")
-    print(c)
-    d = program.validiraj_email("asdasdasdasd")
-    print(d)
-    """
+    #Izprazni datoteko osebe.txt
+    polje = []
+    pisanjePodatkov(polje,"w")
 
-    polje = locenjePodatkov(vsebina)
-    #print(array)
-    pisanjePodatkov(polje, "w")
+    for i in range(len(datoteke)):
+        vsebina = branjeTXT(datoteke[i])
+        polje = locenjePodatkov(vsebina)
+        pisanjePodatkov(polje, "a")
+        
+    print("Program koncan")
