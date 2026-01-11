@@ -17,6 +17,13 @@ def branjeTXT(datoteka):
         content = file.read()
     return content
 
+def pisanjePodatkov(podatki):
+    with open("osebe.txt", "w", encoding="utf-8") as file:
+        file.write(podatki)
+
+def locenjePodatkov(vsebina):
+    segments = vsebina.split('|')
+    print(segments)
 
 
 if __name__ == "__main__":
@@ -26,4 +33,4 @@ if __name__ == "__main__":
     print(st)
 
     vsebina = branjeTXT(datoteke[0])
-    print(vsebina)
+    locenjePodatkov(vsebina)
