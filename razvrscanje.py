@@ -11,13 +11,12 @@ def preberiTXT(datoteka):
         for vrstica in dat:
             vrstica = vrstica.strip() 
             podatek = vrstica.split('_')
-            if len(podatek) == 5:
+            if len(podatek) == 4:
                 oseba = {
-                "id": podatek[0],
-                "imePriimek": podatek[1],
-                "ulica": podatek[2],
-                "telefonska": podatek[3],
-                "email": podatek[4]
+                "imePriimek": podatek[0],
+                "ulica": podatek[1],
+                "telefonska": podatek[2],
+                "email": podatek[3]
                 }
 
                 polje.append(oseba)
@@ -27,7 +26,7 @@ def preberiTXT(datoteka):
 def pisanjeSortiranihPodatkov(polje, argument = "a"):
     with open("sortiraniPodatki.txt", argument, encoding="utf-8") as dat:
         for oseba in polje:
-            niz = f"{oseba['id']}_{oseba['imePriimek']}_{oseba['ulica']}_{oseba['telefonska']}_{oseba['email']}\n"
+            niz = f"{oseba['imePriimek']}_{oseba['ulica']}_{oseba['telefonska']}_{oseba['email']}\n"
             dat.write(niz)
 
 def razvrscanjeIme(polje, DESC):

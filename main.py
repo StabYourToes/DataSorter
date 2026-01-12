@@ -21,14 +21,13 @@ def branjeTXT(datoteka):
 def pisanjePodatkov(polje, argument = "a"):
     with open("osebe.txt", argument, encoding="utf-8") as dat:
         for oseba in polje:
-            niz = f"{oseba['id']}_{oseba['imePriimek']}_{oseba['ulica']}_{oseba['telefonska']}_{oseba['email']}\n"
+            niz = f"{oseba['imePriimek']}_{oseba['ulica']}_{oseba['telefonska']}_{oseba['email']}\n"
             dat.write(niz)
 
 def locenjePodatkov(vsebina):
     segments = vsebina.split('|')
     veljavneOsebe = []
-    id = 0
-    
+
     for segment in segments:
         informacije = segment.split('_')
         if len(informacije) < 3:
@@ -44,9 +43,8 @@ def locenjePodatkov(vsebina):
             and val.validiraj_telefonsko(telefosnka) != "False"
             and val.validiraj_email(email) != "False"):
             
-            id += 1
+
             oseba = {
-                "id": id,
                 "imePriimek": imePriimek,
                 "ulica": ulica,
                 "telefonska": telefosnka,
@@ -65,14 +63,14 @@ if __name__ == "__main__":
     print("Seminarksa naloga - 2. del")
     print("Iskanje tekstovnih datotek...")
     print("Ločevanje podatkov...")
-    #Izprazni datoteko osebe.txt
-    polje = []
-    pisanjePodatkov(polje,"w")
 
-    for i in range(len(datoteke)):
-        vsebina = branjeTXT(datoteke[i])
-        polje = locenjePodatkov(vsebina)
-        pisanjePodatkov(polje, "a")
+    vseOsebe = []
+    for datoteka in datoteke:
+        vsebina = branjeTXT(datoteka)
+        osebe = locenjePodatkov(vsebina)
+        vseOsebe.extend(osebe)
+    
+    pisanjePodatkov(vseOsebe, "w")
     
     while True:
         print("Ločevanje končano! Podatki so zapisani v tekstovni datoteki osebe.txt!")
@@ -83,25 +81,26 @@ if __name__ == "__main__":
         print("     4. Email naslovu")
         print("     5. Končaj z programom")
         izibira = int(input("Po katere podatku želite razvrstiti podatke(vpišite številko): "))
-        if izibira == 5:
-            break
-        DESC = bool(int(input("Želite da so podatki razvrščeni naraščajoče ali padajoce(1-padajoče/0-naraščajoče): ")))
 
         poljeSort = []
         match izibira:
             case 1:
+                DESC = bool(int(input("Želite da so podatki razvrščeni naraščajoče ali padajoce(1-padajoče/0-naraščajoče): ")))
                 poljeSort = raz.preberiTXT("osebe.txt")
                 raz.razvrscanjeIme(poljeSort, DESC)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 2:
+                DESC = bool(int(input("Želite da so podatki razvrščeni naraščajoče ali padajoce(1-padajoče/0-naraščajoče): ")))
                 poljeSort = raz.preberiTXT("osebe.txt")
                 raz.razvrscanjeUlice(poljeSort, DESC)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 3:
+                DESC = bool(int(input("Želite da so podatki razvrščeni naraščajoče ali padajoce(1-padajoče/0-naraščajoče): ")))
                 poljeSort = raz.preberiTXT("osebe.txt")
                 raz.razvrscanjeTelefonska(poljeSort, DESC)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 4:
+                DESC = bool(int(input("Želite da so podatki razvrščeni naraščajoče ali padajoce(1-padajoče/0-naraščajoče): ")))
                 poljeSort = raz.preberiTXT("osebe.txt")
                 raz.razvrscanjeEmail(poljeSort, DESC)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
