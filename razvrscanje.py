@@ -4,43 +4,55 @@ import locale
 #Ker sumnike tretiral kot osnovno obliko crke č => c š => s
 locale.setlocale(locale.LC_COLLATE, "sl_SI.UTF-8")
 
-def preberiTXT(datoteka):
-    polje = []
-
-    with open(datoteka, "r", encoding="utf-8") as dat:
-        for vrstica in dat:
-            vrstica = vrstica.strip() 
-            podatek = vrstica.split('_')
-            if len(podatek) == 4:
-                oseba = {
-                "imePriimek": podatek[0],
-                "ulica": podatek[1],
-                "telefonska": podatek[2],
-                "email": podatek[3]
-                }
-
-                polje.append(oseba)
-    
-    return polje
-
 def pisanjeSortiranihPodatkov(polje, argument = "a"):
     with open("sortiraniPodatki.txt", argument, encoding="utf-8") as dat:
         for oseba in polje:
-            niz = f"{oseba['imePriimek']}_{oseba['ulica']}_{oseba['telefonska']}_{oseba['email']}\n"
+            niz = f"{oseba['ime']} {oseba['priimek']}_{oseba['ulica']} {oseba['hisnaSt']} {oseba['postnaSt']} {oseba['posta']}_{oseba['telefonska']}_{oseba['email']}\n"
             dat.write(niz)
 
-def razvrscanjeIme(polje, DESC):
-    polje.sort(reverse = DESC, key=lambda o: locale.strxfrm(o["imePriimek"]))
+def merge(polje, kljuc, l, m, r):
+    n1 = m - l + 1
+    n2 = r - m
 
-    #oblika ce bi sori brez sumnikov
-    # polje.sort(key=lambda o: o["imePriimek"])
-    #Lamba - Za vsako osebo o vzemi o["imePriimek"] in po tem razvrsti.
+    #To ustvari array L dolzine n, kjer je vsak element 0
+    L = [None] * n1
+    R = [None] * n2
 
-def razvrscanjeUlice(polje, DESC):
-    polje.sort(reverse = DESC, key=lambda o: locale.strxfrm(o["ulica"]))
+    for i in range(n1):
+        L[i] = polje[l + i]
+    
+    for j in range(n2):
+        R[j] = polje[m + 1 + j]
+    
+    i = j = 0
+    k = l
 
-def razvrscanjeTelefonska(polje, DESC):
-    polje.sort(reverse = DESC, key=lambda o: o["telefonska"])
+    while i < n1 and j < n2:
+        if locale.strcoll(L[i][kljuc], R[j][kljuc]) <= 0:
+            polje[k] = L[i]
+            i += 1
+        else:
+            polje[k] = R[j]
+            j += 1
+        k += 1
+    
+    while i < n1:
+        polje[k] = L[i]
+        i += 1
+        k += 1
+    while j < n2:
+        polje[k] = R[j]
+        j += 1
+        k += 1
+    
+def mergeSort(polje, kljuc, l, r):
+    if l < r:
+        m = l + (r - l) // 2
+        mergeSort(polje, kljuc, l, m)
+        mergeSort(polje, kljuc, m + 1, r)
+        merge(polje, kljuc, l, m, r)
 
-def razvrscanjeEmail(polje, DESC):
-    polje.sort(reverse = DESC, key=lambda o: locale.strxfrm(o["email"]))
+
+    
+
+
