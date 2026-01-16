@@ -3,12 +3,6 @@ import re
 email_rgx = re.compile(r"^[A-Za-z0-9._%&*+\-/=?^{|}~]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+){1,3}$")
 
 
-def pisanjeSortiranihPodatkov(polje, argument):
-    with open("sortiraniPodatki.txt", argument, encoding="utf-8") as dat:
-        for oseba in polje:
-            niz = f"{oseba['ime']} {oseba['priimek']}_{oseba['ulica']} {oseba['hisnaSt']} {oseba['postnaSt']} {oseba['posta']}_{oseba['telefonska']}_{oseba['email']}\n"
-            dat.write(niz)
-
 def validiraj_ime(ime_in_priimek):
     ime = ""
     priimek = ""

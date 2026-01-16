@@ -1,10 +1,11 @@
 import validacija as val
 import razvrscanje as raz
 import os
-
+import copy
 
 def pridobi_txt(pot):
     txt_datoteke = []
+
     for element in os.listdir(pot):
         polna_pot = os.path.join(pot, element)
         if os.path.isdir(polna_pot):
@@ -25,39 +26,53 @@ def pisanjePodatkov(polje, argument = "a"):
             niz = f"{oseba['ime']} {oseba['priimek']}_{oseba['ulica']} {oseba['hisnaSt']} {oseba['postnaSt']} {oseba['posta']}_{oseba['telefonska']}_{oseba['email']}\n"
             dat.write(niz)
 
-def locenjePodatkov(vsebina):
+def locenjePodatkov(vsebina, unikatneOsebe):
     segments = vsebina.split('|')
     veljavneOsebe = []
 
     for segment in segments:
         informacije = segment.split('_')
-        if len(informacije) < 3:
+        if len(informacije) < 4:
             continue
         
         imePriimek = informacije[0]
-        ulica = informacije[1]
+        naslov = informacije[1]
         telefosnka = informacije[2]
         email = informacije[3]
         
-        if (len(val.validiraj_ime(imePriimek)) != 0 
-            and len(val.validiraj_naslov(ulica)) != 0 
-            and val.validiraj_telefonsko(telefosnka) != "False"
-            and val.validiraj_email(email) != "False"):
+        if len(val.validiraj_ime(imePriimek)) == 0:
+            continue
+        if len(val.validiraj_naslov(naslov)) == 0:
+            continue
+        if val.validiraj_email(email) == "False":
+            continue
+        if val.validiraj_telefonsko(telefosnka) == "False":
+            continue
 
-            imePriimek_arr = val.validiraj_ime(imePriimek)
-            naslov_arr = val.validiraj_naslov(ulica)
+        imePriimek_arr = val.validiraj_ime(imePriimek)
+        naslov_arr = val.validiraj_naslov(naslov)
             
+        oseba = {
+            "ime": imePriimek_arr[0],
+            "priimek": imePriimek_arr[1],
+            "ulica": naslov_arr[0],
+            "hisnaSt": naslov_arr[1],
+            "postnaSt": naslov_arr[2],
+            "posta": naslov_arr[3],
+            "telefonska": telefosnka,
+            "email": email 
+        }
 
-            oseba = {
-                "ime": imePriimek_arr[0],
-                "priimek": imePriimek_arr[1],
-                "ulica": naslov_arr[0],
-                "hisnaSt": naslov_arr[1],
-                "postnaSt": naslov_arr[2],
-                "posta": naslov_arr[3],
-                "telefonska": telefosnka,
-                "email": email 
-            }
+        identitetaOsebe = (
+            oseba["ime"], oseba["priimek"], oseba["ulica"],
+            oseba["hisnaSt"], oseba["postnaSt"], oseba["posta"],
+            oseba["telefonska"], oseba["email"]    
+        )
+
+        if identitetaOsebe in unikatneOsebe:
+            continue
+        else:
+            unikatneOsebe.add(identitetaOsebe)
             veljavneOsebe.append(oseba)
     
     return veljavneOsebe
@@ -66,20 +81,26 @@ def locenjePodatkov(vsebina):
 
 if __name__ == "__main__":
     mapa = "D:/Faks/data"
+    unikatneOsebe = set()
+    mapaFilip = "D:/Faks/Filip_data(2)/data"
     datoteke = pridobi_txt(mapa)
- 
-    print("Seminarksa naloga - 2. del")
+    stDatotek = len(datoteke)
+    print("Stevilo tekstovnih datotek:", stDatotek)
 
     vseOsebe = []
     for datoteka in datoteke:
         vsebina = branjeTXT(datoteka)
-        osebe = locenjePodatkov(vsebina)
+        osebe = locenjePodatkov(vsebina, unikatneOsebe)
         vseOsebe.extend(osebe)
     
     pisanjePodatkov(vseOsebe, "w")
-    
+    stOseb = len(vseOsebe)
+
+    print("Ločevanje končano! Program je našel:", stOseb, "vseljavnih oseb. Podatki so zapisani v tekstovni datoteki osebe.txt!")
+
+    print("Seminarksa naloga - 2. del")
+    print("")
     while True:
-        print("Ločevanje končano! Podatki so zapisani v tekstovni datoteki osebe.txt!")
         print("Razvrščevanje po:")
         print("     1. Imenu")
         print("     2. Priimku")
@@ -92,31 +113,39 @@ if __name__ == "__main__":
         print("     0. Končaj z programom")
         izibira = int(input("Po katere podatku želite razvrstiti podatke(vpišite številko): "))
 
-        poljeSort = vseOsebe
+        poljeSort = copy.deepcopy(vseOsebe)
         match izibira:
             case 1:
-                raz.mergeSort(poljeSort, "ime", 0 , len(poljeSort) - 1)
+                narascajoce = bool(int(input("Želite da so podatki sortirani naraščajoče ali padajoče(1/0): ")))
+                raz.mergeSort(poljeSort, narascajoce, "ime", 0 , len(poljeSort) - 1)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 2:
-                raz.mergeSort(poljeSort, "priimek", 0 , len(poljeSort) - 1)
+                narascajoce = bool(int(input("Želite da so podatki sortirani naraščajoče ali padajoče(1/0): ")))
+                raz.mergeSort(poljeSort, narascajoce, "priimek", 0 , len(poljeSort) - 1)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 3:
-                raz.mergeSort(poljeSort, "ulica", 0 , len(poljeSort) - 1)
+                narascajoce = bool(int(input("Želite da so podatki sortirani naraščajoče ali padajoče(1/0): ")))               
+                raz.mergeSort(poljeSort, narascajoce, "ulica", 0 , len(poljeSort) - 1)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 4:
-                raz.mergeSort(poljeSort, "hisnaSt", 0 , len(poljeSort) - 1)
+                narascajoce = bool(int(input("Želite da so podatki sortirani naraščajoče ali padajoče(1/0): ")))                
+                raz.mergeSort(poljeSort, narascajoce, "hisnaSt", 0 , len(poljeSort) - 1)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 5:
-                raz.mergeSort(poljeSort, "postnaSt", 0 , len(poljeSort) - 1)
+                narascajoce = bool(int(input("Želite da so podatki sortirani naraščajoče ali padajoče(1/0): ")))                
+                raz.mergeSort(poljeSort, narascajoce, "postnaSt", 0 , len(poljeSort) - 1)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 6:
-                raz.mergeSort(poljeSort, "posta", 0 , len(poljeSort) - 1)
+                narascajoce = bool(int(input("Želite da so podatki sortirani naraščajoče ali padajoče(1/0): ")))                
+                raz.mergeSort(poljeSort, narascajoce, "posta", 0 , len(poljeSort) - 1)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 7:
-                raz.mergeSort(poljeSort, "telefonska", 0 , len(poljeSort) - 1)
+                narascajoce = bool(int(input("Želite da so podatki sortirani naraščajoče ali padajoče(1/0): ")))                
+                raz.mergeSort(poljeSort, narascajoce, "telefonska", 0 , len(poljeSort) - 1)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 8:
-                raz.mergeSort(poljeSort, "email", 0 , len(poljeSort) - 1)
+                narascajoce = bool(int(input("Želite da so podatki sortirani naraščajoče ali padajoče(1/0): ")))                
+                raz.mergeSort(poljeSort, narascajoce, "email", 0 , len(poljeSort) - 1)
                 raz.pisanjeSortiranihPodatkov(poljeSort, "w")
             case 0:
                 break
@@ -124,6 +153,7 @@ if __name__ == "__main__":
                 print("Niste vnesli pravilno številko")
         
         print("Sortirani podatki so shranjeni v teskovni datoteki sortiraniPodatki.txt")
+        print("")
 
 
 
