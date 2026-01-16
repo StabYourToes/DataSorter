@@ -50,7 +50,7 @@ def validiraj_ime(ime_in_priimek):
         
         i += 1
     
-    if (any(c.isdigit() for c in ime) == False and any(c.isdigit() for c in priimek) == False and (ime_uppercase_counter == 1) and (pri_uppercase_counter == pri_wordcounter) and ime != "" and priimek != ""):
+    if  (ime_uppercase_counter == 1) and (pri_uppercase_counter == pri_wordcounter) and ime != "" and priimek != "":    # Ni treba še enkrat za številke preverjat
         ime_priimek_arr.append(ime)
         ime_priimek_arr.append(priimek.strip())
         
@@ -75,11 +75,14 @@ def validiraj_naslov(naslov):
         else:
             if naslov[i] == " " and naslov[i+1].isdigit():
                 continue
-            ulica = ulica + naslov[i]
+            if naslov[i].isalpha() or naslov[i] == " ":
+                ulica = ulica + naslov[i]
+            else:
+                return []
     
     presledek_index = 0
     temp = ""
-    for i in range(index, len(naslov)):     #pridobi hišno, poštno številko 
+    for i in range(index, len(naslov)):     # pridobi hišno, poštno številko 
         if naslov[i] == " ":
             presledek_index = i
             break
@@ -95,6 +98,23 @@ def validiraj_naslov(naslov):
     
     if naslov[len(naslov)-1].isdigit():
         return []
+    
+    if postna_st.isdigit() == False:
+        return []
+    
+    crka = False
+    
+    if hisna_st[0].isalpha():
+        return []
+    for i in hisna_st:
+        if i.isalpha():
+            crka = True
+        if (i.isdigit() == False and i.isalpha() == False) or (i.isdigit() and crka == True) :
+            return []
+    
+    for i in posta:
+        if i.isalpha() == False and i != " ":
+            return []
     
     naslov_arr.append(ulica.strip())
     naslov_arr.append(hisna_st)
@@ -182,5 +202,3 @@ def validiraj_email(email):
     if email_rgx.fullmatch(email):
         return email
     return "False"
-
-    
