@@ -80,10 +80,10 @@ def locenjePodatkov(vsebina, unikatneOsebe):
 
 
 if __name__ == "__main__":
-    mapa = "D:/Faks/data"
+    mapeDjordje = ["D:/Faks/data", "D:/Faks/dataGen2"]
+    mapeFilip = ["D:/Faks/Gracner/data","D:/Faks/Filip_data(2)/data", "D:/Faks/dataFilipNovo/dataFilipNovo"]
     unikatneOsebe = set()
-    mapaFilip = "D:/Faks/Filip_data(2)/data"
-    datoteke = pridobi_txt(mapa)
+    datoteke = pridobi_txt(mapeFilip[0])
     stDatotek = len(datoteke)
     print("Stevilo tekstovnih datotek:", stDatotek)
 

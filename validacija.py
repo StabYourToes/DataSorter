@@ -96,10 +96,10 @@ def validiraj_naslov(naslov):
     for i in range(presledek_index+1, len(naslov)):
         posta += naslov[i]
     
-    if naslov[len(naslov)-1].isdigit():
+    if postna_st.isdigit() == False:
         return []
     
-    if postna_st.isdigit() == False:
+    if ulica == "" or hisna_st == "" or postna_st == "" or posta == "":
         return []
     
     crka = False
@@ -115,6 +115,7 @@ def validiraj_naslov(naslov):
     for i in posta:
         if i.isalpha() == False and i != " ":
             return []
+    
     
     naslov_arr.append(ulica.strip())
     naslov_arr.append(hisna_st)
