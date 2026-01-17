@@ -5,7 +5,7 @@ import locale
 locale.setlocale(locale.LC_COLLATE, "sl_SI.UTF-8")
 
 def pisanjeSortiranihPodatkov(polje, argument = "a"):
-    with open("sortiraniPodatki.txt", argument, encoding="utf-8") as dat:
+    with open("Output/sortiraniPodatki.txt", argument, encoding="utf-8") as dat:
         for oseba in polje:
             niz = f"{oseba['ime']} {oseba['priimek']}_{oseba['ulica']} {oseba['hisnaSt']} {oseba['postnaSt']} {oseba['posta']}_{oseba['telefonska']}_{oseba['email']}\n"
             dat.write(niz)

@@ -73,12 +73,10 @@ def validiraj_naslov(naslov):
             index = i
             break
         else:
-            if naslov[i] == " " and naslov[i+1].isdigit():
+            if naslov[i] == " " and i + 1 < len(naslov) and naslov[i+1].isdigit():
                 continue
-            if naslov[i].isalpha() or naslov[i] == " ":
-                ulica = ulica + naslov[i]
             else:
-                return []
+                ulica = ulica + naslov[i]
     
     presledek_index = 0
     temp = ""
@@ -203,3 +201,4 @@ def validiraj_email(email):
     if email_rgx.fullmatch(email):
         return email
     return "False"
+

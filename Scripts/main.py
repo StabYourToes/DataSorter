@@ -21,7 +21,7 @@ def branjeTXT(datoteka):
     return vsebina
 
 def pisanjePodatkov(polje, argument = "a"):
-    with open("osebe.txt", argument, encoding="utf-8") as dat:
+    with open("Output/osebe.txt", argument, encoding="utf-8") as dat:
         for oseba in polje:
             niz = f"{oseba['ime']} {oseba['priimek']}_{oseba['ulica']} {oseba['hisnaSt']} {oseba['postnaSt']} {oseba['posta']}_{oseba['telefonska']}_{oseba['email']}\n"
             dat.write(niz)
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     mapeDjordje = ["D:/Faks/data", "D:/Faks/dataGen2"]
     mapeFilip = ["D:/Faks/Gracner/data","D:/Faks/Filip_data(2)/data", "D:/Faks/dataFilipNovo/dataFilipNovo"]
     unikatneOsebe = set()
-    datoteke = pridobi_txt(mapeFilip[0])
+    datoteke = pridobi_txt(mapeFilip[2])
     stDatotek = len(datoteke)
     print("Stevilo tekstovnih datotek:", stDatotek)
 
